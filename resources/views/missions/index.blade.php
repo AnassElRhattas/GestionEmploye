@@ -39,12 +39,104 @@
                         <!-- Sélection des employés -->
                         <div id="employees-section">
                             <div class="mb-4">
-                                <label for="employees" class="block text-sm font-medium text-gray-700">Employés disponibles</label>
-                                <select name="employees[]" id="employees" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" multiple>
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Employés disponibles</label>
+                                
+                                <!-- Barre de recherche -->
+                                <div class="mb-4">
+                                    <input type="text" id="employee-search" placeholder="Rechercher un employé..." 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                                
+                                <!-- Filtres -->
+                                <div class="mb-4 flex flex-wrap gap-2">
+                                    <select id="experience-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                        <option value="">Toute expérience</option>
+                                        <option value="0-2">0-2 ans</option>
+                                        <option value="3-5">3-5 ans</option>
+                                        <option value="6-10">6-10 ans</option>
+                                        <option value="10+">10+ ans</option>
+                                    </select>
+                                    <select id="speciality-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                        <option value="">Toutes spécialités</option>
+                                        <option value="Agriculture">Agriculture</option>
+                                        <option value="Élevage">Élevage</option>
+                                        <option value="Horticulture">Horticulture</option>
+                                        <option value="Mécanique agricole">Mécanique agricole</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Compteur d'employés sélectionnés -->
+                                <div class="mb-3">
+                                    <span id="selected-count" class="text-sm text-gray-600">0 employé(s) sélectionné(s)</span>
+                                </div>
+                                
+                                <!-- Grille des employés -->
+                                <div id="employees-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-4">
                                     @foreach($availableEmployees as $employee)
-                                        <option value="{{ $employee->id }}">{{ $employee->nom }} {{ $employee->prenom }} ({{ $employee->poste }})</option>
+                                        <div class="employee-card bg-white border border-gray-200 rounded-lg p-4 cursor-pointer hover:shadow-md transition-all duration-200" 
+                                             data-employee-id="{{ $employee->id }}"
+                                             data-name="{{ strtolower($employee->nom . ' ' . $employee->prenom) }}"
+                                             data-experience="{{ $employee->experience_annees ?? 0 }}"
+                                             data-specialities="{{ is_array($employee->specialites) ? implode(',', $employee->specialites) : (is_string($employee->specialites) ? $employee->specialites : '') }}">
+                                            
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex-1">
+                                                    <h4 class="font-medium text-gray-900">{{ $employee->nom }} {{ $employee->prenom }}</h4>
+                                                    <p class="text-sm text-gray-500 mt-1">{{ $employee->age }} ans</p>
+                                                    
+                                                    @if($employee->experience_annees)
+                                                        <p class="text-sm text-blue-600 mt-1">
+                                                            <span class="inline-flex items-center">
+                                                                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                                </svg>
+                                                                {{ $employee->experience_annees }} ans d'expérience
+                                                            </span>
+                                                        </p>
+                                                    @endif
+                                                    
+                                                    @if($employee->specialites)
+                                                        <div class="mt-2">
+                                                            @php
+                                                                $specs = is_array($employee->specialites) ? $employee->specialites : json_decode($employee->specialites, true);
+                                                            @endphp
+                                                            @if(!empty($specs))
+                                                                <div class="flex flex-wrap gap-1">
+                                                                    @foreach(array_slice($specs, 0, 2) as $spec)
+                                                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                                            {{ $spec }}
+                                                                        </span>
+                                                                    @endforeach
+                                                                    @if(count($specs) > 2)
+                                                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                                                                            +{{ count($specs) - 2 }}
+                                                                        </span>
+                                                                    @endif
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                
+                                                <!-- Checkbox de sélection -->
+                                                <div class="ml-3">
+                                                    <input type="checkbox" name="employees[]" value="{{ $employee->id }}" 
+                                                           class="employee-checkbox w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endforeach
-                                </select>
+                                </div>
+                                
+                                @if($availableEmployees->isEmpty())
+                                    <div class="text-center py-8 text-gray-500">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                        </svg>
+                                        <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun employé disponible</h3>
+                                        <p class="mt-1 text-sm text-gray-500">Tous les employés sont actuellement assignés à des missions.</p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         
@@ -135,23 +227,149 @@
     @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialisation de Select2 pour la sélection multiple d'employés
-            $('#employees').select2({
-                placeholder: 'Sélectionnez les employés',
-                allowClear: true
+            const employeeCards = document.querySelectorAll('.employee-card');
+            const searchInput = document.getElementById('employee-search');
+            const experienceFilter = document.getElementById('experience-filter');
+            const specialityFilter = document.getElementById('speciality-filter');
+            const selectedCount = document.getElementById('selected-count');
+            
+            // Fonction pour mettre à jour le compteur
+            function updateSelectedCount() {
+                const selectedCheckboxes = document.querySelectorAll('.employee-checkbox:checked');
+                const count = selectedCheckboxes.length;
+                selectedCount.textContent = `${count} employé(s) sélectionné(s)`;
+            }
+            
+            // Fonction pour filtrer les employés
+            function filterEmployees() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const experienceValue = experienceFilter.value;
+                const specialityValue = specialityFilter.value.toLowerCase();
+                
+                employeeCards.forEach(card => {
+                    const name = card.dataset.name;
+                    const experience = parseInt(card.dataset.experience);
+                    const specialities = card.dataset.specialities.toLowerCase();
+                    
+                    let showCard = true;
+                    
+                    // Filtre par nom
+                    if (searchTerm && !name.includes(searchTerm)) {
+                        showCard = false;
+                    }
+                    
+                    // Filtre par expérience
+                    if (experienceValue) {
+                        switch (experienceValue) {
+                            case '0-2':
+                                if (experience < 0 || experience > 2) showCard = false;
+                                break;
+                            case '3-5':
+                                if (experience < 3 || experience > 5) showCard = false;
+                                break;
+                            case '6-10':
+                                if (experience < 6 || experience > 10) showCard = false;
+                                break;
+                            case '10+':
+                                if (experience < 10) showCard = false;
+                                break;
+                        }
+                    }
+                    
+                    // Filtre par spécialité
+                    if (specialityValue && !specialities.includes(specialityValue)) {
+                        showCard = false;
+                    }
+                    
+                    card.style.display = showCard ? 'block' : 'none';
+                });
+            }
+            
+            // Gestion de la sélection des employés
+            employeeCards.forEach(card => {
+                const checkbox = card.querySelector('.employee-checkbox');
+                
+                // Clic sur la carte pour sélectionner/désélectionner
+                card.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        checkbox.checked = !checkbox.checked;
+                        updateCardAppearance(card, checkbox.checked);
+                        updateSelectedCount();
+                    }
+                });
+                
+                // Clic direct sur la checkbox
+                checkbox.addEventListener('change', function() {
+                    updateCardAppearance(card, this.checked);
+                    updateSelectedCount();
+                });
             });
             
-            // Gestion de l'affichage du tableau des missions
-            const missionTable = document.getElementById('mission-table');
-            const noMissionsMessage = document.getElementById('no-missions');
-            
-            if (missionTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr').length === 0) {
-                missionTable.classList.add('hidden');
-                noMissionsMessage.classList.remove('hidden');
-            } else {
-                missionTable.classList.remove('hidden');
-                noMissionsMessage.classList.add('hidden');
+            // Fonction pour mettre à jour l'apparence de la carte
+            function updateCardAppearance(card, isSelected) {
+                if (isSelected) {
+                    card.classList.add('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+                    card.classList.remove('bg-white');
+                } else {
+                    card.classList.remove('ring-2', 'ring-indigo-500', 'bg-indigo-50');
+                    card.classList.add('bg-white');
+                }
             }
+            
+            // Événements de filtrage
+            searchInput.addEventListener('input', filterEmployees);
+            experienceFilter.addEventListener('change', filterEmployees);
+            specialityFilter.addEventListener('change', filterEmployees);
+            
+            // Boutons de sélection rapide
+            const employeesSection = document.getElementById('employees-section');
+            const quickSelectDiv = document.createElement('div');
+            quickSelectDiv.className = 'mb-4 flex gap-2';
+            quickSelectDiv.innerHTML = `
+                <button type="button" id="select-all" class="px-3 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                    Tout sélectionner
+                </button>
+                <button type="button" id="deselect-all" class="px-3 py-1 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700">
+                    Tout désélectionner
+                </button>
+            `;
+            
+            const employeesGrid = document.getElementById('employees-grid');
+            employeesSection.insertBefore(quickSelectDiv, employeesGrid);
+            
+            // Fonctionnalité de sélection rapide
+            document.getElementById('select-all').addEventListener('click', function() {
+                const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
+                visibleCards.forEach(card => {
+                    const checkbox = card.querySelector('.employee-checkbox');
+                    checkbox.checked = true;
+                    updateCardAppearance(card, true);
+                });
+                updateSelectedCount();
+            });
+            
+            document.getElementById('deselect-all').addEventListener('click', function() {
+                employeeCards.forEach(card => {
+                    const checkbox = card.querySelector('.employee-checkbox');
+                    checkbox.checked = false;
+                    updateCardAppearance(card, false);
+                });
+                updateSelectedCount();
+            });
+            
+            // Validation du formulaire
+            const form = document.getElementById('mission-form');
+            form.addEventListener('submit', function(e) {
+                const selectedEmployees = document.querySelectorAll('.employee-checkbox:checked');
+                if (selectedEmployees.length === 0) {
+                    e.preventDefault();
+                    alert('Veuillez sélectionner au moins un employé pour cette mission.');
+                    return false;
+                }
+            });
+            
+            // Initialisation du compteur
+            updateSelectedCount();
         });
     </script>
     @endpush
