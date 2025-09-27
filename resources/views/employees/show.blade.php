@@ -22,16 +22,26 @@
             </div>
 
             <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100">
-                <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700">
+                <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700 shadow-md rounded-t-lg">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-white p-2 rounded-full mr-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="flex-shrink-0 bg-white p-3 rounded-full mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-xl leading-6 font-bold text-white">{{ $employee->prenom }} {{ $employee->nom }}</h3>
-                            <p class="mt-1 max-w-2xl text-sm text-white text-opacity-90">{{ $employee->experience_annees }} ans d'expérience • {{ $employee->zone_rurale }}</p>
+                            <h3 class="text-2xl leading-6 font-bold text-white">{{ $employee->prenom }} {{ $employee->nom }}</h3>
+                            <p class="mt-2 max-w-2xl text-sm text-white text-opacity-90 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                {{ $employee->experience_annees }} ans d'expérience • 
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                {{ $employee->zone_rurale }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -169,6 +179,12 @@
                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                         </svg>
                         {{ __('Modifier') }}
+                    </a>
+                    <a href="{{ route('employees.pdf', $employee) }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:from-purple-600 hover:to-purple-700 shadow-sm transition-all duration-150 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
+                        </svg>
+                        {{ __('Télécharger PDF') }}
                     </a>
                     <form action="{{ route('employees.destroy', $employee) }}" method="POST">
                         @csrf

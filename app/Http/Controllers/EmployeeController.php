@@ -164,4 +164,13 @@ class EmployeeController extends Controller
         
         return response()->json(['status' => 'success', 'disponible' => $employee->disponible]);
     }
+    
+    /**
+     * Generate PDF for employee.
+     */
+    public function generatePDF(Employee $employee)
+    {
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('employees.pdf', compact('employee'));
+        return $pdf->download('employe-'.$employee->nom.'-'.$employee->prenom.'.pdf');
+    }
 }

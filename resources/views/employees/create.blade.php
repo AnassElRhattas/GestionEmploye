@@ -10,9 +10,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100">
-                <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700">
+                <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700 shadow-md">
                     <div class="flex items-center">
-                        <div class="flex-shrink-0 bg-white p-2 rounded-full mr-4">
+                        <div class="flex-shrink-0 bg-white p-3 rounded-full mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                             </svg>

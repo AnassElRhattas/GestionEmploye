@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     // Routes pour les employés
     Route::resource('employees', EmployeeController::class);
     Route::post('/employees/{employee}/toggle-availability', [EmployeeController::class, 'toggleAvailability'])->name('employees.toggle-availability');
+    Route::get('/employees/{employee}/pdf', [EmployeeController::class, 'generatePDF'])->name('employees.pdf');
 });
 
 require __DIR__.'/auth.php';
