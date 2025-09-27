@@ -31,7 +31,7 @@ class EmployeeController extends Controller
         $employees = $query->latest()->paginate(10);
         
         if ($request->ajax()) {
-            return view('employees.table', compact('employees'))->render();
+            return view('employees.index', compact('employees'))->render();
         }
         
         return view('employees.index', compact('employees'));

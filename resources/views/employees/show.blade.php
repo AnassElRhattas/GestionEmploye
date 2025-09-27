@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Détails de l\'employé') }}
             </h2>
-            <span class="px-3 py-1 {{ $employee->disponible ? 'bg-gradient-to-r from-green-500 to-green-600' : 'bg-gradient-to-r from-red-500 to-red-600' }} text-white rounded-full text-sm font-medium shadow-sm">
+            <span class="px-3 py-1 {{ $employee->disponible ? 'bg-gradient-to-r from-indigo-500 to-indigo-600' : 'bg-gradient-to-r from-red-500 to-red-600' }} text-white rounded-full text-sm font-medium shadow-sm">
                 {{ $employee->disponible ? 'Disponible' : 'Non disponible' }}
             </span>
         </div>
@@ -22,10 +22,10 @@
             </div>
 
             <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100">
-                <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-green-600 to-green-700 shadow-md rounded-t-lg">
+                <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-indigo-600 to-blue-600 shadow-md rounded-t-lg">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 bg-white p-3 rounded-full mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
@@ -112,7 +112,7 @@
                             
                             <div>
                                 <p class="text-sm font-medium text-gray-500 mb-2">Disponibilité</p>
-                                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium {{ $employee->disponible ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white' }} shadow-sm">
+                                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium {{ $employee->disponible ? 'bg-gradient-to-r from-indigo-500 to-indigo-600 text-white' : 'bg-gradient-to-r from-red-500 to-red-600 text-white' }} shadow-sm">
                                     @if($employee->disponible)
                                         <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -138,8 +138,11 @@
                         </div>
                         <div class="p-4">
                             <div class="flex flex-wrap gap-3">
-                                @foreach(json_decode($employee->experience_cultures) as $culture)
-                                    <span class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full text-sm font-medium shadow-sm flex items-center">
+                                @php
+                                    $cultures = is_string($employee->experience_cultures) ? json_decode($employee->experience_cultures) : $employee->experience_cultures;
+                                @endphp
+                                @foreach($cultures as $culture)
+                                    <span class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-full text-sm font-medium shadow-sm flex items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                         </svg>
@@ -159,9 +162,12 @@
                         </div>
                         <div class="p-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                @foreach(json_decode($employee->specialites) as $specialite)
-                                    <div class="flex items-center p-3 bg-green-50 rounded-lg border border-green-100 hover:bg-green-100 transition-colors duration-150">
-                                        <svg class="h-5 w-5 text-green-600 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                @php
+                                    $specialites = is_string($employee->specialites) ? json_decode($employee->specialites) : $employee->specialites;
+                                @endphp
+                                @foreach($specialites as $specialite)
+                                    <div class="flex items-center p-3 bg-indigo-50 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition-colors duration-150">
+                                        <svg class="h-5 w-5 text-indigo-600 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
                                         <span class="text-gray-800 font-medium">{{ $specialite }}</span>

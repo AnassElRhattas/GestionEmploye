@@ -1,123 +1,226 @@
+@if(!request()->ajax())
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Liste des employés') }}
         </h2>
     </x-slot>
+    
+    <!-- Alpine.js pour les menus déroulants -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-200">
-                <div class="p-6 text-gray-900">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 bg-gradient-to-r from-gray-50 to-gray-100 p-5 rounded-lg border border-gray-200 shadow-md">
-                        <div class="flex flex-col md:flex-row items-center space-y-3 md:space-y-0 md:space-x-5 w-full md:w-auto">
-                            <div class="w-full md:w-auto">
-                                <label for="search" class="block text-sm font-semibold text-gray-700 mb-2">Rechercher un employé</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg class="h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <input type="text" id="search" placeholder="Rechercher par nom ou prénom..." class="pl-10 w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 transition-all duration-200 py-2.5">
+            <!-- Messages de notification -->
+            @if(session('success'))
+                <div id="notification" class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 flex justify-between items-center">
+                    <div>
+                        <p class="font-bold">Succès!</p>
+                        <p>{{ session('success') }}</p>
+                    </div>
+                    <button onclick="document.getElementById('notification').remove()" class="text-green-700 hover:text-green-900">
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            @endif
+            
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <!-- En-tête avec recherche, filtre et bouton d'ajout -->
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <!-- Barre de recherche améliorée -->
+                        <div class="relative w-full md:w-1/3">
+                            <div class="relative w-full">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
                                 </div>
-                            </div>
-                            <div class="w-full md:w-auto">
-                                <label for="filter-disponible" class="block text-sm font-semibold text-gray-700 mb-2">Filtrer par disponibilité</label>
-                                <select id="filter-disponible" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50 transition-all duration-200 py-2.5 pl-3 pr-10">
-                                    <option value="">Tous les employés</option>
-                                    <option value="true">Disponibles uniquement</option>
-                                    <option value="false">Non disponibles uniquement</option>
-                                </select>
+                                <input type="text" id="search" placeholder="Rechercher un employé..." class="w-full pl-10 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
                             </div>
                         </div>
-                        <div class="w-full md:w-auto mt-4 md:mt-0">
-                            <a href="{{ route('employees.create') }}" class="w-full md:w-auto inline-flex items-center justify-center px-5 py-3 bg-gradient-to-r from-green-500 to-green-600 border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-wider hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-200 shadow-lg transform hover:scale-105">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        
+                        <!-- Filtre par disponibilité -->
+                        <div class="relative w-full md:w-1/3">
+                            <select id="filter-disponible" class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                                <option value="">Tous</option>
+                                <option value="true">Disponibles</option>
+                                <option value="false">Non disponibles</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Boutons d'action -->
+                        <div class="flex space-x-2">
+                            <a href="{{ route('employees.create') }}" class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                 </svg>
-                                {{ __('Ajouter un employé') }}
+                                Ajouter un employé
                             </a>
                         </div>
                     </div>
+@endif
 
-                    @if (session('success'))
-                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md mb-4 flex items-center" role="alert">
-                            <svg class="h-6 w-6 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span class="block sm:inline">{{ session('success') }}</span>
+                    <div id="employees-table">
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                            @if($employees->isEmpty())
+                                <div class="p-8 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Aucun employé</h3>
+                                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Commencez par ajouter un nouvel employé.</p>
+                                    <div class="mt-6">
+                                        <a href="{{ route('employees.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            Ajouter un employé
+                                        </a>
+                                    </div>
+                                </div>
+                            @else
+                                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">#</th>
+                                            <th scope="col" class="px-6 py-3">Nom</th>
+                                            <th scope="col" class="px-6 py-3">Prénom</th>
+                                            <th scope="col" class="px-6 py-3">Âge</th>
+                                            <th scope="col" class="px-6 py-3">Zone rurale</th>
+                                            <th scope="col" class="px-6 py-3">Expérience</th>
+                                            <th scope="col" class="px-6 py-3">Disponibilité</th>
+                                            <th scope="col" class="px-6 py-3 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach ($employees as $index => $employee)
+                                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                            <td class="px-6 py-4">{{ $index + 1 }}</td>
+                                            <td class="px-6 py-4">{{ $employee->nom }}</td>
+                                            <td class="px-6 py-4">{{ $employee->prenom }}</td>
+                                            <td class="px-6 py-4">{{ $employee->age }} ans</td>
+                                            <td class="px-6 py-4">{{ $employee->zone_rurale }}</td>
+                                            <td class="px-6 py-4">{{ $employee->experience_annees }} ans</td>
+                                            
+                                            <!-- Disponibilité avec badge -->
+                                            <td class="px-6 py-4">
+                                                <button onclick="toggleAvailability({{ $employee->id }}, this)"
+                                                    class="px-2 py-1 text-xs font-semibold rounded-full {{ $employee->disponible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                    {{ $employee->disponible ? 'Disponible' : 'Non disponible' }}
+                                                </button>
+                                            </td>
+                                            
+                                            <!-- Actions -->
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-center justify-center space-x-3">
+                                                    <!-- Bouton View avec icône -->
+                                                    <a href="{{ route('employees.show', $employee) }}"
+                                                        class="p-1.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors duration-200" 
+                                                        title="Voir les détails">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                    </a>
+                                                    
+                                                    <!-- Bouton Edit avec icône -->
+                                                    <a href="{{ route('employees.edit', $employee) }}"
+                                                        class="p-1.5 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors duration-200" 
+                                                        title="Modifier">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </a>
+                                                    
+                                                    <!-- Menu déroulant pour plus d'actions -->
+                                                    <div class="relative" x-data="{ open: false }">
+                                                        <button @click="open = !open" class="p-1.5 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors duration-200" title="Plus d'actions">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                                            </svg>
+                                                        </button>
+                                                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-700">
+                                                            <!-- Bouton de suppression -->
+                                                            <form action="{{ route('employees.destroy', $employee) }}" method="POST" class="w-full">
+                                                                @csrf @method('DELETE')
+                                                                <button type="submit" onclick="return confirm('Supprimer cet employé ?')" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                                    <div class="flex items-center">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                        </svg>
+                                                                        Supprimer
+                                                                    </div>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                                
+                                <!-- Pagination -->
+                                <div class="px-6 py-4">
+                                    {{ $employees->links('vendor.pagination.tailwind') }}
+                                </div>
+                            @endif
                         </div>
-                    @endif
-
-                    <div id="employees-table" class="bg-white rounded-lg shadow-inner border border-gray-100">
-                        @include('employees.table')
                     </div>
-                </div>
-            </div>
+            
+            @if(!request()->ajax())
         </div>
     </div>
 
     <script>
-        // Recherche en temps réel
-        const searchInput = document.getElementById('search');
-        const filterDisponible = document.getElementById('filter-disponible');
+        const searchInput   = document.getElementById('search');
+        const filterSelect  = document.getElementById('filter-disponible');
         let searchTimer;
 
-        function performSearch() {
-            const searchValue = searchInput.value;
-            const disponibleValue = filterDisponible.value;
-            
-            fetch(`{{ route('employees.index') }}?search=${searchValue}&disponible=${disponibleValue}`, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById('employees-table').innerHTML = html;
+        function fetchEmployees() {
+            const params = new URLSearchParams({
+                search: searchInput.value,
+                disponible: filterSelect.value
             });
+            fetch(`{{ route('employees.index') }}?${params}`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(res => res.text())
+            .then(html => document.getElementById('employees-table').innerHTML = html);
         }
 
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', () => {
             clearTimeout(searchTimer);
-            searchTimer = setTimeout(performSearch, 300);
+            searchTimer = setTimeout(fetchEmployees, 300);
         });
 
-        filterDisponible.addEventListener('change', performSearch);
+        filterSelect.addEventListener('change', fetchEmployees);
 
-        // Fonction pour basculer la disponibilité
-        function toggleAvailability(employeeId, button) {
-            fetch(`{{ url('/employees') }}/${employeeId}/toggle-availability`, {
+        function toggleAvailability(id, btn) {
+            fetch(`/employees/${id}/toggle-availability`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    if (data.disponible) {
-                        button.textContent = 'Disponible';
-                        button.classList.remove('bg-red-600', 'hover:bg-red-700');
-                        button.classList.add('bg-green-600', 'hover:bg-green-700');
-                    } else {
-                        button.textContent = 'Non disponible';
-                        button.classList.remove('bg-green-600', 'hover:bg-green-700');
-                        button.classList.add('bg-red-600', 'hover:bg-red-700');
-                    }
-                    // Rafraîchir la liste si un filtre est actif
-                    if (filterDisponible.value) {
-                        performSearch();
-                    }
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                 }
             })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('Une erreur est survenue lors du changement de disponibilité');
-            });
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    btn.textContent = data.disponible ? 'Disponible' : 'Non disponible';
+                    btn.classList.toggle('bg-green-100', data.disponible);
+                    btn.classList.toggle('text-green-800', data.disponible);
+                    btn.classList.toggle('bg-red-100', !data.disponible);
+                    btn.classList.toggle('text-red-800', !data.disponible);
+                    if (filterSelect.value) fetchEmployees();
+                }
+            })
+            .catch(() => alert('Erreur lors du changement de disponibilité'));
         }
     </script>
 </x-app-layout>
+@endif
