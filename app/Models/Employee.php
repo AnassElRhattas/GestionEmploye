@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Employee extends Model
 {
@@ -25,4 +26,13 @@ class Employee extends Model
         'specialites' => 'array',
         'disponible' => 'boolean',
     ];
+
+    /**
+     * Les missions auxquelles cet employé est assigné
+     */
+    public function missions(): BelongsToMany
+    {
+        return $this->belongsToMany(Mission::class, 'employee_mission')
+                    ->withTimestamps();
+    }
 }

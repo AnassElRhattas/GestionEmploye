@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('employees.create')" :active="request()->routeIs('employees.create')">
                         {{ __('Ajouter un employé') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('missions.index')" :active="request()->routeIs('missions.index')">
+                        {{ __('Gestion des missions') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -81,6 +84,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('employees.create')" :active="request()->routeIs('employees.create')">
                 {{ __('Ajouter un employé') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('missions.index')" :active="request()->routeIs('missions.index')">
+                {{ __('Gestion des missions') }}
             </x-responsive-nav-link>
         </div>
 
