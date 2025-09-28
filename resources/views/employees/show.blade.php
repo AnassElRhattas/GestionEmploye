@@ -221,7 +221,7 @@
                             <form action="{{ route('employees.destroy', $employee) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 dark:focus:ring-red-800 active:bg-red-800 dark:active:bg-red-700 disabled:opacity-25 transition" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé?')">
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 dark:bg-red-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 dark:focus:ring-red-800 active:bg-red-800 dark:active:bg-red-700 disabled:opacity-25 transition" onclick="event.preventDefault(); confirmSupprimerEmploye(this.parentNode)">
                                     <svg class="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>

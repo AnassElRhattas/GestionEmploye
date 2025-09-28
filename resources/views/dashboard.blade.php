@@ -382,10 +382,10 @@
                         missionsChart.options.plugins.title.text = 'Évolution des missions de ' + allLabels[debutMois] + ' à ' + allLabels[finMois];
                         missionsChart.update();
                     } else {
-                        alert('La date de début doit être antérieure à la date de fin.');
+                        showErrorAlert('La date de début doit être antérieure à la date de fin.');
                     }
                 } else {
-                    alert('Veuillez sélectionner une date de début et une date de fin.');
+                    showErrorAlert('Veuillez sélectionner une date de début et une date de fin.');
                 }
             });
         });

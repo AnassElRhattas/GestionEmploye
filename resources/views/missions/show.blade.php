@@ -65,7 +65,7 @@
                                 @method('PATCH')
                                 <input type="hidden" name="status" value="terminee">
                                 <x-danger-button
-                                    onclick="return confirm('Êtes-vous sûr de vouloir finaliser cette mission ?')">
+                                    onclick="event.preventDefault(); confirmFinaliserMission(this.parentNode)">
                                     {{ __('Finaliser la mission') }}
                                 </x-danger-button>
                             </form>

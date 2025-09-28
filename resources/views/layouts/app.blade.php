@@ -14,6 +14,9 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
         <style>
             :root {
                 --primary-color: #00714c;
@@ -41,5 +44,54 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <!-- Scripts SweetAlert2 -->
+        <script>
+            // Fonction pour confirmer la finalisation d'une mission
+            function confirmFinaliserMission(form) {
+                Swal.fire({
+                    title: 'Êtes-vous sûr?',
+                    text: 'Voulez-vous vraiment finaliser cette mission?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#00714c',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, finaliser',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+
+            // Fonction pour confirmer la suppression d'un employé
+            function confirmSupprimerEmploye(form) {
+                Swal.fire({
+                    title: 'Supprimer cet employé?',
+                    text: 'Cette action est irréversible!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Oui, supprimer',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+
+            // Fonction pour afficher une alerte d'erreur
+            function showErrorAlert(message) {
+                Swal.fire({
+                    title: 'Erreur',
+                    text: message,
+                    icon: 'error',
+                    confirmButtonColor: '#00714c'
+                });
+            }
+        </script>
     </body>
 </html>

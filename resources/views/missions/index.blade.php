@@ -329,7 +329,7 @@
                                                         @csrf
                                                         @method('PATCH')
                                                         <input type="hidden" name="status" value="terminee">
-                                                        <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="return confirm('Êtes-vous sûr de vouloir finaliser cette mission ?')">
+                                                        <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="event.preventDefault(); confirmFinaliserMission(this.parentNode)">
                                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                                                             </svg>
@@ -605,7 +605,7 @@
                     const selectedEmployees = document.querySelectorAll('.employee-checkbox:checked');
                     if (selectedEmployees.length === 0) {
                         e.preventDefault();
-                        alert('Veuillez sélectionner au moins un employé pour cette mission.');
+                        showErrorAlert('Veuillez sélectionner au moins un employé pour cette mission.');
                         return false;
                     }
                 });
