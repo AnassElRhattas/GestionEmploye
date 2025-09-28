@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/missions', [App\Http\Controllers\MissionController::class, 'index'])->name('missions.index');
     Route::post('/missions', [App\Http\Controllers\MissionController::class, 'store'])->name('missions.store');
     Route::get('/missions/{mission}', [App\Http\Controllers\MissionController::class, 'show'])->name('missions.show');
+    Route::get('/missions/{mission}/pdf', [App\Http\Controllers\MissionController::class, 'generatePdf'])->name('missions.pdf');
     Route::patch('/missions/{mission}/status', [App\Http\Controllers\MissionController::class, 'updateStatus'])->name('missions.update-status');
     Route::get('/missions/employees/available', [App\Http\Controllers\MissionController::class, 'getAvailableEmployees'])->name('missions.get-available-employees');
 });

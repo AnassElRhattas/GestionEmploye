@@ -147,4 +147,13 @@ class MissionController extends Controller
     {
         return view('missions.show', compact('mission'));
     }
+    
+    /**
+     * Génère un PDF du cahier de charge de la mission
+     */
+    public function generatePdf(Mission $mission)
+    {
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('missions.mission-pdf', compact('mission'));
+        return $pdf->download('cahier-de-charge-' . $mission->id . '.pdf');
+    }
 }

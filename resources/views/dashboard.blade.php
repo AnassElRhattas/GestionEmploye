@@ -272,15 +272,38 @@
             // Données pour le graphique de tendance des missions
             const ctx = document.getElementById('missionsChart').getContext('2d');
             
-            // Simuler des données de tendance (à remplacer par des données réelles)
-            const allLabels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-            const allMissionsEnCours = [4, 6, 8, 10, 7, 9, 11, 8, 6, 7, 9, 10];
-            const allMissionsTerminees = [2, 3, 5, 7, 9, 11, 8, 6, 5, 8, 10, 12];
+            // Données réelles de la base de données
+            @php
+                $allLabels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+                $currentYear = date('Y');
+                
+                // Initialiser les tableaux pour stocker les comptages par mois
+                $missionsEnCours = array_fill(0, 12, 0);
+                $missionsTerminees = array_fill(0, 12, 0);
+                
+                // Récupérer toutes les missions
+                $missions = \App\Models\Mission::whereYear('created_at', $currentYear)->get();
+                
+                // Compter les missions par mois et par statut
+                foreach ($missions as $mission) {
+                    $month = $mission->created_at->format('n') - 1; // 0-indexed month
+                    if ($mission->status === 'en_cours') {
+                        $missionsEnCours[$month]++;
+                    } else {
+                        $missionsTerminees[$month]++;
+                    }
+                }
+            @endphp
             
-            // Initialiser avec les 6 premiers mois par défaut
-            let labels = allLabels.slice(0, 6);
-            let missionsEnCours = allMissionsEnCours.slice(0, 6);
-            let missionsTerminees = allMissionsTerminees.slice(0, 6);
+            // Convertir les données PHP en JavaScript
+            const allLabels = @json($allLabels);
+            const allMissionsEnCours = @json($missionsEnCours);
+            const allMissionsTerminees = @json($missionsTerminees);
+            
+            // Initialiser avec les données de tous les mois
+            let labels = allLabels;
+            let missionsEnCours = allMissionsEnCours;
+            let missionsTerminees = allMissionsTerminees;
             
             // Créer le graphique
             let missionsChart = new Chart(ctx, {
@@ -356,6 +379,7 @@
                         missionsChart.data.labels = labels;
                         missionsChart.data.datasets[0].data = missionsEnCours;
                         missionsChart.data.datasets[1].data = missionsTerminees;
+                        missionsChart.options.plugins.title.text = 'Évolution des missions de ' + allLabels[debutMois] + ' à ' + allLabels[finMois];
                         missionsChart.update();
                     } else {
                         alert('La date de début doit être antérieure à la date de fin.');
