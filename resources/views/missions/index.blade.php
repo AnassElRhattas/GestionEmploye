@@ -1,74 +1,159 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestion des Missions') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Gestion des Missions') }}
+            </h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Onglets -->
+            <div class="mb-6 border-b border-gray-200">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
+                    <li class="mr-2">
+                        <a href="#nouvelle-mission" class="inline-block p-4 border-b-2 border-blue-600 rounded-t-lg text-blue-600 active" aria-current="page">
+                            <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Nouvelle mission
+                        </a>
+                    </li>
+                    <li class="mr-2">
+                        <a href="#liste-missions" class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300">
+                            <svg class="w-4 h-4 mr-1 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            Liste des missions
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
             <!-- Formulaire de création de mission -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+            <div id="nouvelle-mission" class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Nouvelle Mission</h3>
+                    <div class="flex items-center mb-6">
+                        <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-900">Créer une nouvelle mission</h3>
+                    </div>
                     
-                    <form id="mission-form" method="POST" action="{{ route('missions.store') }}" class="space-y-4">
+                    <form id="mission-form" method="POST" action="{{ route('missions.store') }}" class="space-y-6">
                         @csrf
                         
-                        <!-- Intitulé de la mission -->
-                        <div>
-                            <x-input-label for="title" :value="__('Nature de la mission')" />
-                            <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus />
-                            <x-input-error :messages="$errors->get('title')" class="mt-2" />
-                        </div>
-                        
-                        <!-- Durée de la mission -->
-                        <div>
-                            <x-input-label for="duration_days" :value="__('Durée (jours)')" />
-                            <x-text-input id="duration_days" class="block mt-1 w-full" type="number" name="duration_days" min="1" :value="old('duration_days')" required />
-                            <x-input-error :messages="$errors->get('duration_days')" class="mt-2" />
-                        </div>
-                        
-                        <!-- Entreprise -->
-                        <div id="company-section">
-                            <x-input-label for="company" :value="__('Entreprise')" />
-                            <x-text-input id="company" class="block mt-1 w-full" type="text" name="company" :value="old('company')" required />
-                            <x-input-error :messages="$errors->get('company')" class="mt-2" />
-                        </div>
-                        
-                        <!-- Sélection des employés -->
-                        <div id="employees-section">
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-3">Employés disponibles</label>
-                                
-                                <!-- Barre de recherche -->
-                                <div class="mb-4">
-                                    <input type="text" id="employee-search" placeholder="Rechercher un employé..." 
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Colonne gauche -->
+                            <div class="space-y-6">
+                                <!-- Intitulé de la mission -->
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">Informations générales</h4>
+                                    
+                                    <div class="mb-4">
+                                        <x-input-label for="title" :value="__('Nature de la mission')" />
+                                        <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" required autofocus placeholder="Ex: Développement agricole" />
+                                        <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                                    </div>
+                                    
+                                    <!-- Entreprise -->
+                                    <div id="company-section">
+                                        <x-input-label for="company" :value="__('Entreprise cliente')" />
+                                        <x-text-input id="company" class="block mt-1 w-full" type="text" name="company" :value="old('company')" required placeholder="Ex: Ferme Dupont" />
+                                        <x-input-error :messages="$errors->get('company')" class="mt-2" />
+                                    </div>
                                 </div>
                                 
-                                <!-- Filtres -->
-                                <div class="mb-4 flex flex-wrap gap-2">
-                                    <select id="experience-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
-                                        <option value="">Toute expérience</option>
-                                        <option value="0-2">0-2 ans</option>
-                                        <option value="3-5">3-5 ans</option>
-                                        <option value="6-10">6-10 ans</option>
-                                        <option value="10+">10+ ans</option>
-                                    </select>
-                                    <select id="speciality-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
-                                        <option value="">Toutes spécialités</option>
-                                        <option value="Agriculture">Agriculture</option>
-                                        <option value="Élevage">Élevage</option>
-                                        <option value="Horticulture">Horticulture</option>
-                                        <option value="Mécanique agricole">Mécanique agricole</option>
-                                    </select>
+                                <!-- Durée de la mission -->
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">Planification</h4>
+                                    
+                                    <div class="mb-4">
+                                        <x-input-label for="duration_type" :value="__('Type de durée')" />
+                                        <select id="duration_type" class="block mt-1 w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                                            <option value="days">Nombre de jours</option>
+                                            <option value="dates">Dates spécifiques</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div id="days-duration" class="mb-4">
+                                        <x-input-label for="duration_days" :value="__('Durée (jours)')" />
+                                        <x-text-input id="duration_days" class="block mt-1 w-full" type="number" name="duration_days" min="1" :value="old('duration_days')" required />
+                                        <x-input-error :messages="$errors->get('duration_days')" class="mt-2" />
+                                    </div>
+                                    
+                                    <div id="dates-duration" class="hidden space-y-4">
+                                        <div>
+                                            <x-input-label for="start_date" :value="__('Date de début')" />
+                                            <x-text-input id="start_date" class="block mt-1 w-full" type="date" name="start_date" :value="old('start_date')" />
+                                            <x-input-error :messages="$errors->get('start_date')" class="mt-2" />
+                                        </div>
+                                        <div>
+                                            <x-input-label for="end_date" :value="__('Date de fin')" />
+                                            <x-text-input id="end_date" class="block mt-1 w-full" type="date" name="end_date" :value="old('end_date')" />
+                                            <x-input-error :messages="$errors->get('end_date')" class="mt-2" />
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <!-- Compteur d'employés sélectionnés -->
-                                <div class="mb-3">
-                                    <span id="selected-count" class="text-sm text-gray-600">0 employé(s) sélectionné(s)</span>
+                                <!-- Notes et description -->
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <x-input-label for="notes" :value="__('Description et objectifs')" />
+                                    <textarea id="notes" name="notes" rows="4" class="block mt-1 w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" placeholder="Décrivez les objectifs et les détails de la mission...">{{ old('notes') }}</textarea>
+                                    <x-input-error :messages="$errors->get('notes')" class="mt-2" />
                                 </div>
+                            </div>
+                            
+                            <!-- Colonne droite - Sélection des employés -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div id="employees-section">
+                                    <div class="mb-4">
+                                        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                            </svg>
+                                            Employés disponibles
+                                        </h4>
+                                        
+                                        <!-- Barre de recherche -->
+                                        <div class="mb-4 relative">
+                                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                                </svg>
+                                            </div>
+                                            <input type="text" id="employee-search" placeholder="Rechercher un employé..." 
+                                                   class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        
+                                        <!-- Filtres -->
+                                        <div class="mb-4 flex flex-wrap gap-2">
+                                            <select id="experience-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                                <option value="">Toute expérience</option>
+                                                <option value="0-2">0-2 ans</option>
+                                                <option value="3-5">3-5 ans</option>
+                                                <option value="6-10">6-10 ans</option>
+                                                <option value="10+">10+ ans</option>
+                                            </select>
+                                            <select id="speciality-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                                <option value="">Toutes spécialités</option>
+                                                <option value="Agriculture">Agriculture</option>
+                                                <option value="Élevage">Élevage</option>
+                                                <option value="Horticulture">Horticulture</option>
+                                                <option value="Mécanique agricole">Mécanique agricole</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Compteur d'employés sélectionnés -->
+                                        <div class="mb-3 flex justify-between items-center">
+                                            <span id="selected-count" class="text-sm font-medium px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">0 employé(s) sélectionné(s)</span>
+                                            <button type="button" id="clear-selection" class="text-xs text-gray-500 hover:text-gray-700">
+                                                Effacer la sélection
+                                            </button>
+                                        </div>
                                 
                                 <!-- Grille des employés -->
                                 <div id="employees-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-4">
@@ -151,12 +236,45 @@
             </div>
             
             <!-- Liste des missions existantes -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div id="liste-missions" class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Missions</h3>
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-indigo-100 text-indigo-600 mr-4">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900">Liste des missions</h3>
+                        </div>
+                        
+                        <!-- Filtres pour la liste des missions -->
+                        <div class="flex space-x-2">
+                            <select id="status-filter" class="px-3 py-1 border border-gray-300 rounded-md text-sm">
+                                <option value="all">Tous les statuts</option>
+                                <option value="en_cours">En cours</option>
+                                <option value="terminee">Terminées</option>
+                            </select>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                                <input type="text" id="mission-search" placeholder="Rechercher..." 
+                                       class="pl-10 pr-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+                    </div>
                     
                     @if($missions->isEmpty())
-                        <p class="text-gray-500 text-center py-4">Aucune mission enregistrée.</p>
+                        <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">Aucune mission enregistrée</h3>
+                            <p class="mt-1 text-sm text-gray-500">Commencez par créer une nouvelle mission.</p>
+                        </div>
                     @else
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
@@ -170,9 +288,9 @@
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
+                                <tbody class="bg-white divide-y divide-gray-200" id="missions-table-body">
                                     @foreach($missions as $mission)
-                                        <tr>
+                                        <tr class="mission-row" data-status="{{ $mission->status }}" data-title="{{ strtolower($mission->title) }}" data-company="{{ strtolower($mission->company) }}">
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $mission->title }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mission->company }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -185,7 +303,7 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $mission->status === 'en_cours' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $mission->status === 'en_cours' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
                                                     {{ $mission->status === 'en_cours' ? 'En cours' : 'Terminée' }}
                                                 </span>
                                             </td>
@@ -200,17 +318,31 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 @if($mission->status === 'en_cours')
-                                                    <a href="{{ route('missions.show', $mission) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Suivre l'avancement</a>
+                                                    <a href="{{ route('missions.show', $mission) }}" class="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 mr-2">
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                        </svg>
+                                                        Suivre
+                                                    </a>
                                                     <form method="POST" action="{{ route('missions.update-status', $mission) }}" class="inline">
                                                         @csrf
                                                         @method('PATCH')
                                                         <input type="hidden" name="status" value="terminee">
-                                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Êtes-vous sûr de vouloir finaliser cette mission ?')">
+                                                        <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="return confirm('Êtes-vous sûr de vouloir finaliser cette mission ?')">
+                                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                            </svg>
                                                             Finaliser
                                                         </button>
                                                     </form>
                                                 @else
-                                                    <span class="text-gray-400">Mission terminée</span>
+                                                    <a href="{{ route('missions.show', $mission) }}" class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
+                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                        </svg>
+                                                        Détails
+                                                    </a>
                                                 @endif
                                             </td>
                                         </tr>
@@ -232,6 +364,49 @@
             const experienceFilter = document.getElementById('experience-filter');
             const specialityFilter = document.getElementById('speciality-filter');
             const selectedCount = document.getElementById('selected-count');
+            const clearSelection = document.getElementById('clear-selection');
+            const durationType = document.getElementById('duration_type');
+            const daysDuration = document.getElementById('days-duration');
+            const datesDuration = document.getElementById('dates-duration');
+            
+            // Gestion des onglets
+            const tabLinks = document.querySelectorAll('a[href^="#"]');
+            tabLinks.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    
+                    // Cacher tous les contenus d'onglets
+                    document.querySelectorAll('#nouvelle-mission, #liste-missions').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    
+                    // Afficher le contenu cible
+                    document.getElementById(targetId).style.display = 'block';
+                    
+                    // Mettre à jour les classes des onglets
+                    tabLinks.forEach(t => {
+                        t.classList.remove('border-blue-600', 'text-blue-600');
+                        t.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+                    });
+                    
+                    this.classList.add('border-blue-600', 'text-blue-600');
+                    this.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+                });
+            });
+            
+            // Gestion du type de durée
+            if (durationType) {
+                durationType.addEventListener('change', function() {
+                    if (this.value === 'days') {
+                        daysDuration.classList.remove('hidden');
+                        datesDuration.classList.add('hidden');
+                    } else {
+                        daysDuration.classList.add('hidden');
+                        datesDuration.classList.remove('hidden');
+                    }
+                });
+            }
             
             // Fonction pour mettre à jour le compteur
             function updateSelectedCount() {
@@ -317,9 +492,21 @@
             }
             
             // Événements de filtrage
-            searchInput.addEventListener('input', filterEmployees);
-            experienceFilter.addEventListener('change', filterEmployees);
-            specialityFilter.addEventListener('change', filterEmployees);
+            if (searchInput) searchInput.addEventListener('input', filterEmployees);
+            if (experienceFilter) experienceFilter.addEventListener('change', filterEmployees);
+            if (specialityFilter) specialityFilter.addEventListener('change', filterEmployees);
+            
+            // Effacer la sélection
+            if (clearSelection) {
+                clearSelection.addEventListener('click', function() {
+                    employeeCards.forEach(card => {
+                        const checkbox = card.querySelector('.employee-checkbox');
+                        checkbox.checked = false;
+                        updateCardAppearance(card, false);
+                    });
+                    updateSelectedCount();
+                });
+            }
             
             // Boutons de sélection rapide
             const employeesSection = document.getElementById('employees-section');
@@ -335,10 +522,12 @@
             `;
             
             const employeesGrid = document.getElementById('employees-grid');
-            employeesSection.insertBefore(quickSelectDiv, employeesGrid);
+            if (employeesSection && employeesGrid) {
+                employeesSection.insertBefore(quickSelectDiv, employeesGrid);
+            }
             
             // Fonctionnalité de sélection rapide
-            document.getElementById('select-all').addEventListener('click', function() {
+            document.getElementById('select-all')?.addEventListener('click', function() {
                 const visibleCards = Array.from(employeeCards).filter(card => card.style.display !== 'none');
                 visibleCards.forEach(card => {
                     const checkbox = card.querySelector('.employee-checkbox');
@@ -348,7 +537,7 @@
                 updateSelectedCount();
             });
             
-            document.getElementById('deselect-all').addEventListener('click', function() {
+            document.getElementById('deselect-all')?.addEventListener('click', function() {
                 employeeCards.forEach(card => {
                     const checkbox = card.querySelector('.employee-checkbox');
                     checkbox.checked = false;
@@ -357,16 +546,70 @@
                 updateSelectedCount();
             });
             
+            // Filtrage des missions
+            const statusFilter = document.getElementById('status-filter');
+            const missionSearch = document.getElementById('mission-search');
+            const missionRows = document.querySelectorAll('.mission-row');
+            
+            function filterMissions() {
+                const statusValue = statusFilter ? statusFilter.value : 'all';
+                const searchValue = missionSearch ? missionSearch.value.toLowerCase().trim() : '';
+                
+                missionRows.forEach(row => {
+                    const status = row.dataset.status;
+                    const title = row.dataset.title;
+                    const company = row.dataset.company;
+                    
+                    const matchesStatus = statusValue === 'all' || status === statusValue;
+                    const matchesSearch = searchValue === '' || 
+                                         title.includes(searchValue) || 
+                                         company.includes(searchValue);
+                    
+                    row.style.display = (matchesStatus && matchesSearch) ? '' : 'none';
+                });
+            }
+            
+            if (statusFilter) statusFilter.addEventListener('change', filterMissions);
+            if (missionSearch) missionSearch.addEventListener('input', filterMissions);
+            
+            // Gestion du type de durée (jours ou dates spécifiques)
+            const durationType = document.getElementById('duration_type');
+            const daysDuration = document.getElementById('days-duration');
+            const datesDuration = document.getElementById('dates-duration');
+            const durationDaysInput = document.getElementById('duration_days');
+            const startDateInput = document.getElementById('start_date');
+            const endDateInput = document.getElementById('end_date');
+            
+            if (durationType) {
+                durationType.addEventListener('change', function() {
+                    if (this.value === 'days') {
+                        daysDuration.classList.remove('hidden');
+                        datesDuration.classList.add('hidden');
+                        durationDaysInput.setAttribute('required', '');
+                        startDateInput.removeAttribute('required');
+                        endDateInput.removeAttribute('required');
+                    } else {
+                        daysDuration.classList.add('hidden');
+                        datesDuration.classList.remove('hidden');
+                        durationDaysInput.removeAttribute('required');
+                        startDateInput.setAttribute('required', '');
+                        endDateInput.setAttribute('required', '');
+                    }
+                });
+            }
+            
             // Validation du formulaire
             const form = document.getElementById('mission-form');
-            form.addEventListener('submit', function(e) {
-                const selectedEmployees = document.querySelectorAll('.employee-checkbox:checked');
-                if (selectedEmployees.length === 0) {
-                    e.preventDefault();
-                    alert('Veuillez sélectionner au moins un employé pour cette mission.');
-                    return false;
-                }
-            });
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    const selectedEmployees = document.querySelectorAll('.employee-checkbox:checked');
+                    if (selectedEmployees.length === 0) {
+                        e.preventDefault();
+                        alert('Veuillez sélectionner au moins un employé pour cette mission.');
+                        return false;
+                    }
+                });
+            }
             
             // Initialisation du compteur
             updateSelectedCount();

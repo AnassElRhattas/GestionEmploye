@@ -1,4 +1,10 @@
 <x-guest-layout>
+    <div class="flex justify-center mb-6">
+        <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+    </div>
+    
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Inscription à la plateforme</h2>
+    
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
