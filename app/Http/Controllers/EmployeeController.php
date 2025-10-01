@@ -16,7 +16,7 @@ class EmployeeController extends Controller
         $query = Employee::query();
         
         // Recherche par nom ou prénom
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('nom', 'like', "%{$search}%")
@@ -25,14 +25,18 @@ class EmployeeController extends Controller
         }
         
         // Filtrage par disponibilité
-        if ($request->has('disponible')) {
-            $query->where('disponible', $request->disponible == 'true');
+        if ($request->filled('disponible')) {
+            if ($request->disponible === 'true') {
+                $query->where('disponible', true);
+            } elseif ($request->disponible === 'false') {
+                $query->where('disponible', false);
+            }
         }
         
         $employees = $query->latest()->paginate(10);
         
         if ($request->ajax()) {
-            return view('employees.index', compact('employees'))->render();
+            return view('employees._table', compact('employees'))->render();
         }
         
         return view('employees.index', compact('employees'));

@@ -597,9 +597,6 @@
             if (missionSearch) missionSearch.addEventListener('input', filterMissions);
             
             // Gestion du type de durée (jours ou dates spécifiques)
-            const durationType = document.getElementById('duration_type');
-            const daysDuration = document.getElementById('days-duration');
-            const datesDuration = document.getElementById('dates-duration');
             const durationDaysInput = document.getElementById('duration_days');
             const startDateInput = document.getElementById('start_date');
             const endDateInput = document.getElementById('end_date');

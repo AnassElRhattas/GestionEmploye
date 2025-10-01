@@ -213,10 +213,6 @@
                                             <div class="mt-4">
                                                 <x-input-label :value="__('Expérience par culture')" class="text-gray-700 dark:text-gray-300 font-medium mb-2" />
                                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                                    @php
-                                                        $cultures = ['maraîchage', 'arboriculture', 'ornementale', 'élevage'];
-                                                    @endphp
-                                                    
                                                     @foreach($cultures as $culture)
                                                         <div class="flex items-center p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150">
                                                             <input 
@@ -244,21 +240,6 @@
                                     </div>
                                     <div class="p-4">
                                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                            @php
-                                                $specialites = [
-                                                    'Préparation du sol (labourage, bêchage, désherbage)',
-                                                    'Semis et plantation des plants ou graines',
-                                                    'Arrosage / irrigation',
-                                                    'Entretien et soins des cultures (taillage, élagage, fertilisation)',
-                                                    'Traitement phytosanitaire (pulvérisations, lutte contre les parasites et maladies)',
-                                                    'Récolte des produits (fruits, légumes, fleurs…)',
-                                                    'Tri, nettoyage et conditionnement des récoltes',
-                                                    'Transport interne des récoltes (ramassage, acheminement vers lieu de stockage)',
-                                                    'Entretien des équipements agricoles et des espaces (nettoyage, réparations simples)',
-                                                    'Chargement / déchargement des récoltes ou des intrants (semences, engrais, etc.)'
-                                                ];
-                                            @endphp
-                                            
                                             @foreach($specialites as $index => $specialite)
                                                 <div class="flex items-center p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150">
                                                     <input 
