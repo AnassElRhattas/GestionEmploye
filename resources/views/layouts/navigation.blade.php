@@ -24,6 +24,9 @@
                     <x-nav-link :href="route('missions.index')" :active="request()->routeIs('missions.index')">
                         {{ __('Gestion des missions') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('whatsapp.index')" :active="request()->routeIs('whatsapp.index')">
+                        {{ __('Gestion WhatsApp') }}
+                    </x-nav-link>
                 </div>
             </div>
 

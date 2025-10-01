@@ -15,16 +15,21 @@ class Employee extends Model
         'prenom',
         'age',
         'zone_rurale',
+        'telephone',
+        'identifiant',
         'experience_annees',
         'experience_cultures',
         'specialites',
-        'disponible'
+        'disponible',
+        'evaluation_stars',
+        'evaluation_remark'
     ];
     
     protected $casts = [
         'experience_cultures' => 'array',
         'specialites' => 'array',
         'disponible' => 'boolean',
+        'evaluation_stars' => 'integer',
     ];
 
     /**

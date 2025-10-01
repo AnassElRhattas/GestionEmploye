@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Models\CustomChoice;
 
 class EmployeeController extends Controller
 {
@@ -42,7 +43,7 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        $specialites = [
+        $defaultSpecialites = [
             'Préparation du sol (labourage, bêchage, désherbage)',
             'Semis et plantation des plants ou graines',
             'Arrosage / irrigation',
@@ -55,7 +56,15 @@ class EmployeeController extends Controller
             'Chargement / déchargement des récoltes ou des intrants (semences, engrais, etc.)'
         ];
         
-        $cultures = ['maraîchage', 'arboriculture', 'ornementale', 'élevage'];
+        $defaultCultures = ['maraîchage', 'arboriculture', 'ornementale', 'élevage'];
+        
+        // Charger les choix personnalisés depuis la base
+        $customCultures = CustomChoice::cultures()->orderBy('value')->pluck('value')->toArray();
+        $customSpecialites = CustomChoice::specialites()->orderBy('value')->pluck('value')->toArray();
+        
+        // Fusionner et dédupliquer
+        $specialites = array_values(array_unique(array_merge($defaultSpecialites, $customSpecialites)));
+        $cultures = array_values(array_unique(array_merge($defaultCultures, $customCultures)));
         
         return view('employees.create', compact('specialites', 'cultures'));
     }
@@ -70,14 +79,52 @@ class EmployeeController extends Controller
             'prenom' => 'required|string|max:255',
             'age' => 'required|integer|min:18|max:100',
             'zone_rurale' => 'required|string|max:255',
+            'telephone' => 'nullable|string|max:20',
+            'identifiant' => 'nullable|string|max:50|unique:employees,identifiant',
             'experience_annees' => 'required|integer|min:0',
             'experience_cultures' => 'required|array',
             'specialites' => 'required|array',
+            'other_culture' => 'nullable|string|max:255',
+            'other_specialite' => 'nullable|string|max:255',
+            'evaluation_stars' => 'nullable|integer|min:0|max:5',
+            'evaluation_remark' => 'nullable|string',
         ]);
         
+        // Gérer les ajouts personnalisés (Autre)
+        $experienceCultures = $request->experience_cultures ?? [];
+        $specialites = $request->specialites ?? [];
+        
+        if ($request->filled('other_culture')) {
+            $newCulture = trim($request->input('other_culture'));
+            if ($newCulture !== '') {
+                // Sauvegarder comme option permanente si inexistante
+                CustomChoice::firstOrCreate([
+                    'type' => 'culture',
+                    'value' => $newCulture,
+                ]);
+                // Ajouter à la sélection de cet employé
+                if (!in_array($newCulture, $experienceCultures, true)) {
+                    $experienceCultures[] = $newCulture;
+                }
+            }
+        }
+        
+        if ($request->filled('other_specialite')) {
+            $newSpecialite = trim($request->input('other_specialite'));
+            if ($newSpecialite !== '') {
+                CustomChoice::firstOrCreate([
+                    'type' => 'specialite',
+                    'value' => $newSpecialite,
+                ]);
+                if (!in_array($newSpecialite, $specialites, true)) {
+                    $specialites[] = $newSpecialite;
+                }
+            }
+        }
+        
         // Conversion des tableaux en JSON
-        $validated['experience_cultures'] = json_encode($request->experience_cultures);
-        $validated['specialites'] = json_encode($request->specialites);
+        $validated['experience_cultures'] = json_encode($experienceCultures);
+        $validated['specialites'] = json_encode($specialites);
         
         Employee::create($validated);
         
@@ -98,7 +145,7 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-        $specialites = [
+        $defaultSpecialites = [
             'Préparation du sol (labourage, bêchage, désherbage)',
             'Semis et plantation des plants ou graines',
             'Arrosage / irrigation',
@@ -111,7 +158,13 @@ class EmployeeController extends Controller
             'Chargement / déchargement des récoltes ou des intrants (semences, engrais, etc.)'
         ];
         
-        $cultures = ['maraîchage', 'arboriculture', 'ornementale', 'élevage'];
+        $defaultCultures = ['maraîchage', 'arboriculture', 'ornementale', 'élevage'];
+        
+        $customCultures = CustomChoice::cultures()->orderBy('value')->pluck('value')->toArray();
+        $customSpecialites = CustomChoice::specialites()->orderBy('value')->pluck('value')->toArray();
+        
+        $specialites = array_values(array_unique(array_merge($defaultSpecialites, $customSpecialites)));
+        $cultures = array_values(array_unique(array_merge($defaultCultures, $customCultures)));
         
         return view('employees.edit', compact('employee', 'specialites', 'cultures'));
     }
@@ -126,15 +179,50 @@ class EmployeeController extends Controller
             'prenom' => 'required|string|max:255',
             'age' => 'required|integer|min:18|max:100',
             'zone_rurale' => 'required|string|max:255',
+            'telephone' => 'nullable|string|max:20',
+            'identifiant' => 'nullable|string|max:50|unique:employees,identifiant,' . $employee->id,
             'experience_annees' => 'required|integer|min:0',
             'experience_cultures' => 'required|array',
             'specialites' => 'required|array',
             'disponible' => 'boolean',
+            'other_culture' => 'nullable|string|max:255',
+            'other_specialite' => 'nullable|string|max:255',
+            'evaluation_stars' => 'nullable|integer|min:0|max:5',
+            'evaluation_remark' => 'nullable|string',
         ]);
         
+        $experienceCultures = $request->experience_cultures ?? [];
+        $specialites = $request->specialites ?? [];
+        
+        if ($request->filled('other_culture')) {
+            $newCulture = trim($request->input('other_culture'));
+            if ($newCulture !== '') {
+                CustomChoice::firstOrCreate([
+                    'type' => 'culture',
+                    'value' => $newCulture,
+                ]);
+                if (!in_array($newCulture, $experienceCultures, true)) {
+                    $experienceCultures[] = $newCulture;
+                }
+            }
+        }
+        
+        if ($request->filled('other_specialite')) {
+            $newSpecialite = trim($request->input('other_specialite'));
+            if ($newSpecialite !== '') {
+                CustomChoice::firstOrCreate([
+                    'type' => 'specialite',
+                    'value' => $newSpecialite,
+                ]);
+                if (!in_array($newSpecialite, $specialites, true)) {
+                    $specialites[] = $newSpecialite;
+                }
+            }
+        }
+        
         // Conversion des tableaux en JSON
-        $validated['experience_cultures'] = json_encode($request->experience_cultures);
-        $validated['specialites'] = json_encode($request->specialites);
+        $validated['experience_cultures'] = json_encode($experienceCultures);
+        $validated['specialites'] = json_encode($specialites);
         $validated['disponible'] = $request->has('disponible');
         
         $employee->update($validated);

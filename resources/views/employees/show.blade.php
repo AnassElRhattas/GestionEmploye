@@ -85,6 +85,24 @@
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">{{ $employee->prenom }} {{ $employee->nom }}</p>
                                 </div>
                             </div>
+
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.802 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.802-2.034a1 1 0 00-1.175 0l-2.802 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81H7.03a1 1 0 00.95-.69l1.07-3.292z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Évaluation</p>
+                                    <div class="flex items-center">
+                                        @php $stars = $employee->evaluation_stars ?? 0; @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <svg class="h-5 w-5 {{ $i <= $stars ? 'text-yellow-400' : 'text-gray-300' }}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.802 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.802-2.034a1 1 0 00-1.175 0l-2.802 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81H7.03a1 1 0 00.95-.69l1.07-3.292z"/></svg>
+                                        @endfor
+                                        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">{{ $stars }}/5</span>
+                                    </div>
+                                </div>
+                            </div>
                             
                             <div class="flex items-center">
                                 <div class="w-10 h-10 flex items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 mr-3">
@@ -109,6 +127,34 @@
                                     <p class="text-base font-medium text-gray-900 dark:text-gray-100">{{ $employee->zone_rurale }}</p>
                                 </div>
                             </div>
+                            
+                            @if($employee->telephone)
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300 mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Téléphone</p>
+                                    <p class="text-base font-medium text-gray-900 dark:text-gray-100">{{ $employee->telephone }}</p>
+                                </div>
+                            </div>
+                            @endif
+                            
+                            @if($employee->identifiant)
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 mr-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Identifiant</p>
+                                    <p class="text-base font-medium text-gray-900 dark:text-gray-100">{{ $employee->identifiant }}</p>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
 
@@ -198,6 +244,20 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Remarque d'évaluation -->
+                @if($employee->evaluation_remark)
+                <div class="px-6 pb-6">
+                    <div class="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
+                        <div class="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600">
+                            <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200">Remarque d'évaluation</h3>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-gray-800 dark:text-gray-200">{{ $employee->evaluation_remark }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 <!-- Actions -->
                 <div class="px-6 pb-6">

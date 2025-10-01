@@ -138,6 +138,36 @@
                                         <x-input-error :messages="$errors->get('zone_rurale')" class="mt-2" />
                                     </div>
                                 </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Téléphone -->
+                                    <div>
+                                        <x-input-label for="telephone" :value="__('Téléphone')" />
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                </svg>
+                                            </div>
+                                            <x-text-input id="telephone" name="telephone" type="tel" class="mt-1 block w-full pl-10" :value="old('telephone')" placeholder="Numéro de téléphone" />
+                                        </div>
+                                        <x-input-error :messages="$errors->get('telephone')" class="mt-2" />
+                                    </div>
+                                    
+                                    <!-- Identifiant -->
+                                    <div>
+                                        <x-input-label for="identifiant" :value="__('Identifiant')" />
+                                        <div class="relative">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                                </svg>
+                                            </div>
+                                            <x-text-input id="identifiant" name="identifiant" type="text" class="mt-1 block w-full pl-10" :value="old('identifiant')" placeholder="Identifiant unique" />
+                                        </div>
+                                        <x-input-error :messages="$errors->get('identifiant')" class="mt-2" />
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Section Informations Professionnelles -->
@@ -176,6 +206,18 @@
                                                 <label for="culture_{{ $culture }}" class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-medium">{{ ucfirst($culture) }}</label>
                                             </div>
                                         @endforeach
+                                        <!-- Autre culture -->
+                                        <div class="culture-item flex items-center p-2 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150">
+                                            <input type="checkbox" id="culture_autre_cb" class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500">
+                                            <label for="culture_autre_cb" class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-medium">Autre</label>
+                                        </div>
+                                        <div id="culture_autre_input_wrap" class="col-span-1 sm:col-span-2 hidden">
+                                            <div class="mt-2 flex items-center gap-2">
+                                                <x-input-label for="other_culture" :value="__('Nouvelle culture')" />
+                                                <input type="text" id="other_culture" name="other_culture" value="{{ old('other_culture') }}" placeholder="Saisir une culture personnalisée" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                                                <button type="button" id="add_other_culture" class="inline-flex items-center px-3 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600">Ajouter</button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <x-input-error :messages="$errors->get('experience_cultures')" class="mt-2" />
                                 </div>
@@ -193,6 +235,18 @@
                                                 <label for="specialite_{{ $specialite }}" class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-medium">{{ ucfirst($specialite) }}</label>
                                             </div>
                                         @endforeach
+                                        <!-- Autre spécialité -->
+                                        <div class="specialite-item flex items-center p-2 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150">
+                                            <input type="checkbox" id="specialite_autre_cb" class="rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500">
+                                            <label for="specialite_autre_cb" class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-medium">Autre</label>
+                                        </div>
+                                        <div id="specialite_autre_input_wrap" class="col-span-1 sm:col-span-2 hidden">
+                                            <div class="mt-2 flex items-center gap-2">
+                                                <x-input-label for="other_specialite" :value="__('Nouvelle spécialité')" />
+                                                <input type="text" id="other_specialite" name="other_specialite" value="{{ old('other_specialite') }}" placeholder="Saisir une spécialité personnalisée" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200">
+                                                <button type="button" id="add_other_specialite" class="inline-flex items-center px-3 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600">Ajouter</button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <x-input-error :messages="$errors->get('specialites')" class="mt-2" />
                                 </div>
@@ -251,6 +305,14 @@
             const specialiteItems = document.querySelectorAll('.specialite-item');
             const selectedCulturesDiv = document.getElementById('selected-cultures');
             const selectedSpecialitesDiv = document.getElementById('selected-specialites');
+            const otherCultureCheckbox = document.getElementById('culture_autre_cb');
+            const otherCultureWrap = document.getElementById('culture_autre_input_wrap');
+            const otherCultureInput = document.getElementById('other_culture');
+            const otherSpecialiteCheckbox = document.getElementById('specialite_autre_cb');
+            const otherSpecialiteWrap = document.getElementById('specialite_autre_input_wrap');
+            const otherSpecialiteInput = document.getElementById('other_specialite');
+            const addOtherCultureBtn = document.getElementById('add_other_culture');
+            const addOtherSpecialiteBtn = document.getElementById('add_other_specialite');
             
             // Fonction pour mettre à jour l'affichage des sélections
             function updateSelections() {
@@ -296,6 +358,107 @@
                     item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
                 });
             });
+
+            // Gérer l'affichage des champs "Autre"
+            function toggleOtherField(checkbox, wrap, input) {
+                if (!checkbox) return;
+                const update = () => {
+                    if (checkbox.checked) {
+                        wrap.classList.remove('hidden');
+                        input.focus();
+                    } else {
+                        wrap.classList.add('hidden');
+                        input.value = '';
+                    }
+                };
+                checkbox.addEventListener('change', update);
+                update();
+            }
+
+            toggleOtherField(otherCultureCheckbox, otherCultureWrap, otherCultureInput);
+            toggleOtherField(otherSpecialiteCheckbox, otherSpecialiteWrap, otherSpecialiteInput);
+
+            async function postCustomChoice(type, value) {
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const resp = await fetch("{{ route('custom-choices.store') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ type, value })
+                });
+                if (!resp.ok) {
+                    throw new Error('Erreur lors de l\'ajout');
+                }
+                return await resp.json();
+            }
+
+            function createChoiceElement(kind, value) {
+                const wrapper = document.createElement('div');
+                wrapper.className = `${kind}-item flex items-center p-2 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-150`;
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.id = `${kind}_` + value;
+                input.name = kind === 'culture' ? 'experience_cultures[]' : 'specialites[]';
+                input.value = value;
+                input.className = 'rounded border-gray-300 dark:border-gray-600 text-blue-600 shadow-sm focus:ring-blue-500';
+                input.checked = true;
+                const label = document.createElement('label');
+                label.htmlFor = input.id;
+                label.className = 'ml-2 text-sm text-gray-700 dark:text-gray-300 font-medium';
+                label.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+                wrapper.appendChild(input);
+                wrapper.appendChild(label);
+                return wrapper;
+            }
+
+            function insertAfter(newNode, referenceNode) {
+                referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+            }
+
+            if (addOtherCultureBtn) {
+                addOtherCultureBtn.addEventListener('click', async () => {
+                    const val = (otherCultureInput.value || '').trim();
+                    if (!val) return;
+                    addOtherCultureBtn.disabled = true;
+                    try {
+                        await postCustomChoice('culture', val);
+                        const choiceEl = createChoiceElement('culture', val);
+                        // Insérer juste après la ligne "Autre"
+                        const otherItem = document.getElementById('culture_autre_cb').closest('.culture-item');
+                        insertAfter(choiceEl, otherItem);
+                        // Réinitialiser champ
+                        otherCultureInput.value = '';
+                        updateSelections();
+                    } catch (e) {
+                        alert('Impossible d\'ajouter la culture.');
+                    } finally {
+                        addOtherCultureBtn.disabled = false;
+                    }
+                });
+            }
+
+            if (addOtherSpecialiteBtn) {
+                addOtherSpecialiteBtn.addEventListener('click', async () => {
+                    const val = (otherSpecialiteInput.value || '').trim();
+                    if (!val) return;
+                    addOtherSpecialiteBtn.disabled = true;
+                    try {
+                        await postCustomChoice('specialite', val);
+                        const choiceEl = createChoiceElement('specialite', val);
+                        const otherItem = document.getElementById('specialite_autre_cb').closest('.specialite-item');
+                        insertAfter(choiceEl, otherItem);
+                        otherSpecialiteInput.value = '';
+                        updateSelections();
+                    } catch (e) {
+                        alert('Impossible d\'ajouter la spécialité.');
+                    } finally {
+                        addOtherSpecialiteBtn.disabled = false;
+                    }
+                });
+            }
             
             // Mettre à jour les sélections quand une case est cochée/décochée
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
@@ -321,7 +484,8 @@
                 
                 // Valider qu'au moins une culture est sélectionnée
                 const selectedCultures = form.querySelectorAll('input[name="experience_cultures[]"]:checked');
-                if (selectedCultures.length === 0) {
+                const hasOtherCulture = otherCultureCheckbox && otherCultureCheckbox.checked && otherCultureInput.value.trim() !== '';
+                if (selectedCultures.length === 0 && !hasOtherCulture) {
                     isValid = false;
                     document.querySelector('.culture-item').parentElement.classList.add('border-red-500');
                     if (!firstInvalidField) firstInvalidField = cultureSearch;
@@ -331,7 +495,8 @@
                 
                 // Valider qu'au moins une spécialité est sélectionnée
                 const selectedSpecialites = form.querySelectorAll('input[name="specialites[]"]:checked');
-                if (selectedSpecialites.length === 0) {
+                const hasOtherSpecialite = otherSpecialiteCheckbox && otherSpecialiteCheckbox.checked && otherSpecialiteInput.value.trim() !== '';
+                if (selectedSpecialites.length === 0 && !hasOtherSpecialite) {
                     isValid = false;
                     document.querySelector('.specialite-item').parentElement.classList.add('border-red-500');
                     if (!firstInvalidField) firstInvalidField = specialiteSearch;

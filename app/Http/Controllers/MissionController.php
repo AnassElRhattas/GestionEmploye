@@ -156,4 +156,24 @@ class MissionController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('missions.mission-pdf', compact('mission'));
         return $pdf->download('cahier-de-charge-' . $mission->id . '.pdf');
     }
+    
+    /**
+     * Supprime une mission
+     */
+    public function destroy(Mission $mission)
+    {
+        // Libérer les employés assignés à cette mission
+        $employeeIds = $mission->employees->pluck('id')->toArray();
+        Employee::whereIn('id', $employeeIds)->update(['disponible' => true]);
+        
+        // Supprimer les relations dans la table pivot
+        $mission->employees()->detach();
+        
+        // Supprimer la mission
+        $mission->delete();
+        
+        return redirect()
+            ->route('missions.index')
+            ->with('success', 'Mission supprimée avec succès.');
+    }
 }

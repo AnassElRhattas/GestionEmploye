@@ -20,11 +20,11 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-gray-500 text-sm">Employés</p>
-                                <p class="text-3xl font-semibold text-gray-700">{{ \App\Models\Employee::count() }}</p>
+                                <p class="text-3xl font-semibold text-gray-700">{{ $totalEmployees }}</p>
                             </div>
                         </div>
                         <div class="mt-2">
-                            <p class="text-sm text-gray-600">Dont {{ \App\Models\Employee::where('disponible', true)->count() }} disponibles</p>
+                            <p class="text-sm text-gray-600">Dont {{ $availableEmployees }} disponibles</p>
                         </div>
                     </div>
                 </div>
@@ -40,11 +40,11 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-gray-500 text-sm">Missions</p>
-                                <p class="text-3xl font-semibold text-gray-700">{{ \App\Models\Mission::count() }}</p>
+                                <p class="text-3xl font-semibold text-gray-700">{{ $totalMissions }}</p>
                             </div>
                         </div>
                         <div class="mt-2">
-                            <p class="text-sm text-gray-600">Dont {{ \App\Models\Mission::where('status', 'en_cours')->count() }} en cours</p>
+                            <p class="text-sm text-gray-600">Dont {{ $activeMissions }} en cours</p>
                         </div>
                     </div>
                 </div>
@@ -60,11 +60,6 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-gray-500 text-sm">Taux d'occupation</p>
-                                @php
-                                    $totalEmployees = \App\Models\Employee::count();
-                                    $busyEmployees = \App\Models\Employee::where('disponible', false)->count();
-                                    $occupationRate = $totalEmployees > 0 ? round(($busyEmployees / $totalEmployees) * 100) : 0;
-                                @endphp
                                 <p class="text-3xl font-semibold text-gray-700">{{ $occupationRate }}%</p>
                             </div>
                         </div>
@@ -87,22 +82,73 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-gray-500 text-sm">Missions terminées</p>
-                                <p class="text-3xl font-semibold text-gray-700">{{ \App\Models\Mission::where('status', 'terminee')->count() }}</p>
+                                <p class="text-3xl font-semibold text-gray-700">{{ $completedMissions }}</p>
                             </div>
                         </div>
                         <div class="mt-2">
-                            @php
-                                $totalMissions = \App\Models\Mission::count();
-                                $completedMissions = \App\Models\Mission::where('status', 'terminee')->count();
-                                $completionRate = $totalMissions > 0 ? round(($completedMissions / $totalMissions) * 100) : 0;
-                            @endphp
                             <p class="text-sm text-gray-600">{{ $completionRate }}% du total</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Graphiques et tableaux -->
+            <!-- Statistiques par zone -->
+            <div class="mt-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 bg-white border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Répartition des employés par zone</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach($employeesByZone as $zone)
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-100 hover:shadow-md transition-shadow duration-300">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-lg font-semibold text-gray-800">{{ $zone->zone_rurale }}</h4>
+                                    <div class="mt-2 space-y-1">
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <svg class="h-4 w-4 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                            </svg>
+                                            Total: {{ $zone->count }} employés
+                                        </div>
+                                        <div class="flex items-center text-sm text-green-600">
+                                            <svg class="h-4 w-4 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Disponibles: {{ $zone->available_count }}
+                                        </div>
+                                        <div class="flex items-center text-sm text-red-600">
+                                            <svg class="h-4 w-4 mr-2 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Occupés: {{ $zone->count - $zone->available_count }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-3xl font-bold text-blue-600">{{ $zone->count }}</div>
+                                    <div class="text-sm text-gray-500">employés</div>
+                                    @if($zone->count > 0)
+                                    <div class="mt-2 w-16 bg-gray-200 rounded-full h-2">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: {{ ($zone->available_count / $zone->count) * 100 }}%"></div>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">{{ round(($zone->available_count / $zone->count) * 100) }}% disponibles</div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    
+                    @if($employeesByZone->isEmpty())
+                    <div class="text-center py-8 text-gray-500">
+                        <svg class="h-12 w-12 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <p>Aucun employé enregistré pour le moment.</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Missions récentes -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -119,7 +165,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach(\App\Models\Mission::with('employees')->latest()->take(5)->get() as $mission)
+                                    @foreach($recentMissions as $mission)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $mission->title }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $mission->company }}</td>
@@ -156,7 +202,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach(\App\Models\Employee::latest()->take(5)->get() as $employee)
+                                    @foreach($recentEmployees as $employee)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
@@ -225,31 +271,6 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-700 mb-4">Répartition des employés par spécialité</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                        @php
-                            $specialites = [
-                                'Préparation du sol' => 0,
-                                'Semis et plantation' => 0,
-                                'Arrosage / irrigation' => 0,
-                                'Entretien et soins' => 0,
-                                'Traitement phytosanitaire' => 0
-                            ];
-                            
-                            $employees = \App\Models\Employee::all();
-                            foreach ($employees as $employee) {
-                                $empSpecialites = is_array($employee->specialites) ? $employee->specialites : json_decode($employee->specialites, true);
-                                if (is_array($empSpecialites)) {
-                                    foreach ($empSpecialites as $spec) {
-                                        foreach ($specialites as $key => $count) {
-                                            if (strpos($spec, $key) !== false) {
-                                                $specialites[$key]++;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        @endphp
-
                         @foreach($specialites as $specialite => $count)
                         <div class="bg-gray-50 rounded-lg p-4">
                             <h4 class="text-sm font-medium text-gray-700">{{ $specialite }}</h4>
@@ -271,29 +292,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Données pour le graphique de tendance des missions
             const ctx = document.getElementById('missionsChart').getContext('2d');
-            
-            // Données réelles de la base de données
-            @php
-                $allLabels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-                $currentYear = date('Y');
-                
-                // Initialiser les tableaux pour stocker les comptages par mois
-                $missionsEnCours = array_fill(0, 12, 0);
-                $missionsTerminees = array_fill(0, 12, 0);
-                
-                // Récupérer toutes les missions
-                $missions = \App\Models\Mission::whereYear('created_at', $currentYear)->get();
-                
-                // Compter les missions par mois et par statut
-                foreach ($missions as $mission) {
-                    $month = $mission->created_at->format('n') - 1; // 0-indexed month
-                    if ($mission->status === 'en_cours') {
-                        $missionsEnCours[$month]++;
-                    } else {
-                        $missionsTerminees[$month]++;
-                    }
-                }
-            @endphp
             
             // Convertir les données PHP en JavaScript
             const allLabels = @json($allLabels);

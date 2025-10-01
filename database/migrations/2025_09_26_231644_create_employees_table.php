@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('prenom');
             $table->integer('age');
             $table->string('zone_rurale');
+            $table->string('telephone')->nullable();
+            $table->string('identifiant')->nullable();
             $table->integer('experience_annees');
             $table->json('experience_cultures'); // maraîchage, arboriculture, ornementale, élevage
             $table->json('specialites'); // stocke les spécialités sous forme de tableau

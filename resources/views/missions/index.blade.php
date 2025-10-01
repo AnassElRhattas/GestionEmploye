@@ -318,31 +318,55 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 @if($mission->status === 'en_cours')
-                                                    <a href="{{ route('missions.show', $mission) }}" class="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 mr-2">
-                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                        </svg>
-                                                        Suivre
-                                                    </a>
-                                                    <form method="POST" action="{{ route('missions.update-status', $mission) }}" class="inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <input type="hidden" name="status" value="terminee">
-                                                        <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="event.preventDefault(); confirmFinaliserMission(this.parentNode)">
+                                                    <div class="flex items-center space-x-2">
+                                                        <a href="{{ route('missions.show', $mission) }}" class="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200">
                                                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                             </svg>
-                                                            Finaliser
-                                                        </button>
-                                                    </form>
+                                                            Suivre
+                                                        </a>
+                                                        <form method="POST" action="{{ route('missions.update-status', $mission) }}" class="inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <input type="hidden" name="status" value="terminee">
+                                                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200" onclick="event.preventDefault(); confirmFinaliserMission(this.parentNode)">
+                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                                </svg>
+                                                                Finaliser
+                                                            </button>
+                                                        </form>
+                                                        <form method="POST" action="{{ route('missions.destroy', $mission) }}" class="inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="event.preventDefault(); confirmSupprimerMission(this.parentNode)">
+                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                </svg>
+                                                                Supprimer
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 @else
-                                                    <a href="{{ route('missions.show', $mission) }}" class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
-                                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                                        </svg>
-                                                        Détails
-                                                    </a>
+                                                    <div class="flex items-center space-x-2">
+                                                        <a href="{{ route('missions.show', $mission) }}" class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
+                                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                            </svg>
+                                                            Détails
+                                                        </a>
+                                                        <form method="POST" action="{{ route('missions.destroy', $mission) }}" class="inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="event.preventDefault(); confirmSupprimerMission(this.parentNode)">
+                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                </svg>
+                                                                Supprimer
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 @endif
                                             </td>
                                         </tr>
@@ -614,6 +638,20 @@
             // Initialisation du compteur
             updateSelectedCount();
         });
+        
+        // Fonction pour confirmer la suppression d'une mission
+        function confirmSupprimerMission(form) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette mission ? Cette action libérera tous les employés assignés et ne peut pas être annulée.')) {
+                form.submit();
+            }
+        }
+        
+        // Fonction pour confirmer la finalisation d'une mission
+        function confirmFinaliserMission(form) {
+            if (confirm('Êtes-vous sûr de vouloir finaliser cette mission ? Les employés assignés seront libérés.')) {
+                form.submit();
+            }
+        }
     </script>
     @endpush
 </x-app-layout>

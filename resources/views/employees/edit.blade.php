@@ -120,6 +120,34 @@
                                                 </div>
                                                 <x-input-error :messages="$errors->get('zone_rurale')" class="mt-2" />
                                             </div>
+                                            
+                                            <!-- Téléphone -->
+                                            <div>
+                                                <x-input-label for="telephone" :value="__('Téléphone')" class="text-gray-700 dark:text-gray-300 font-medium" />
+                                                <div class="relative mt-1">
+                                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                        <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                                        </svg>
+                                                    </div>
+                                                    <x-text-input id="telephone" class="block mt-1 w-full pl-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200" type="tel" name="telephone" :value="old('telephone', $employee->telephone)" />
+                                                </div>
+                                                <x-input-error :messages="$errors->get('telephone')" class="mt-2" />
+                                            </div>
+                                            
+                                            <!-- Identifiant -->
+                                            <div>
+                                                <x-input-label for="identifiant" :value="__('Identifiant')" class="text-gray-700 dark:text-gray-300 font-medium" />
+                                                <div class="relative mt-1">
+                                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                        <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                                        </svg>
+                                                    </div>
+                                                    <x-text-input id="identifiant" class="block mt-1 w-full pl-10 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-all duration-200" type="text" name="identifiant" :value="old('identifiant', $employee->identifiant)" />
+                                                </div>
+                                                <x-input-error :messages="$errors->get('identifiant')" class="mt-2" />
+                                            </div>
                                         </div>
                                     </div>
 
@@ -158,6 +186,27 @@
                                                     <label for="disponible" class="ml-2 text-sm text-gray-700 dark:text-gray-300 font-medium">Disponible</label>
                                                 </div>
                                                 <x-input-error :messages="$errors->get('disponible')" class="mt-2" />
+                                            </div>
+
+                                            <!-- Évaluation -->
+                                            <div class="mt-4">
+                                                <h4 class="text-gray-700 dark:text-gray-300 font-medium mb-2">Évaluation</h4>
+                                                <div class="flex items-center gap-2 mb-3">
+                                                    <input type="hidden" id="evaluation_stars" name="evaluation_stars" value="{{ old('evaluation_stars', $employee->evaluation_stars ?? 0) }}">
+                                                    <div id="star-container" class="flex">
+                                                        @for ($i = 1; $i <= 5; $i++)
+                                                            <button type="button" data-star="{{ $i }}" class="star-btn {{ (old('evaluation_stars', $employee->evaluation_stars ?? 0) >= $i) ? 'text-yellow-400' : 'text-gray-300' }}">
+                                                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.802 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.802-2.034a1 1 0 00-1.175 0l-2.802 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81H7.03a1 1 0 00.95-.69l1.07-3.292z"/></svg>
+                                                            </button>
+                                                        @endfor
+                                                    </div>
+                                                    <span id="star-label" class="text-sm text-gray-600 dark:text-gray-400">{{ old('evaluation_stars', $employee->evaluation_stars ?? 0) }}/5</span>
+                                                </div>
+                                                <div>
+                                                    <x-input-label for="evaluation_remark" :value="__('Remarque')" />
+                                                    <textarea id="evaluation_remark" name="evaluation_remark" rows="3" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition duration-200" placeholder="Écrivez une remarque...">{{ old('evaluation_remark', $employee->evaluation_remark) }}</textarea>
+                                                    <x-input-error :messages="$errors->get('evaluation_remark')" class="mt-2" />
+                                                </div>
                                             </div>
                                             
                                             <!-- Expérience par culture -->
@@ -243,4 +292,37 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hiddenInput = document.getElementById('evaluation_stars');
+            const label = document.getElementById('star-label');
+            const buttons = document.querySelectorAll('#star-container .star-btn');
+
+            function renderStars(value) {
+                buttons.forEach((btn) => {
+                    const star = parseInt(btn.getAttribute('data-star'));
+                    if (star <= value) {
+                        btn.classList.add('text-yellow-400');
+                        btn.classList.remove('text-gray-300');
+                    } else {
+                        btn.classList.add('text-gray-300');
+                        btn.classList.remove('text-yellow-400');
+                    }
+                });
+                if (label) label.textContent = `${value}/5`;
+            }
+
+            buttons.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const value = parseInt(btn.getAttribute('data-star'));
+                    hiddenInput.value = value;
+                    renderStars(value);
+                });
+            });
+
+            renderStars(parseInt(hiddenInput.value || '0'));
+        });
+    </script>
+    @endpush
 </x-app-layout>

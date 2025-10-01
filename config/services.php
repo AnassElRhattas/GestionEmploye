@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'whatsapp' => [
+        'base_url' => env('WHATSAPP_SERVICE_URL', 'http://localhost:3000'),
+        'timeout' => env('WHATSAPP_SERVICE_TIMEOUT', 30),
+    ],
+
 ];
