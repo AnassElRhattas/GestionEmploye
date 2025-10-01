@@ -326,27 +326,18 @@
                                                             </svg>
                                                             Suivre
                                                         </a>
-                                                        <form method="POST" action="{{ route('missions.update-status', $mission) }}" class="inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <input type="hidden" name="status" value="terminee">
-                                                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200" onclick="event.preventDefault(); confirmFinaliserMission(this.parentNode)">
-                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                                </svg>
-                                                                Finaliser
-                                                            </button>
-                                                        </form>
-                                                        <form method="POST" action="{{ route('missions.destroy', $mission) }}" class="inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="event.preventDefault(); confirmSupprimerMission(this.parentNode)">
-                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                                </svg>
-                                                                Supprimer
-                                                            </button>
-                                                        </form>
+                                                        <button onclick="openFinalizeModal({{ $mission->id }}, '{{ addslashes($mission->title) }}')" class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200">
+                                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                            </svg>
+                                                            Finaliser
+                                                        </button>
+                                                        <button onclick="openDeleteMissionModal({{ $mission->id }}, '{{ addslashes($mission->title) }}')" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200">
+                                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                            Supprimer
+                                                        </button>
                                                     </div>
                                                 @else
                                                     <div class="flex items-center space-x-2">
@@ -356,16 +347,12 @@
                                                             </svg>
                                                             Détails
                                                         </a>
-                                                        <form method="POST" action="{{ route('missions.destroy', $mission) }}" class="inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200" onclick="event.preventDefault(); confirmSupprimerMission(this.parentNode)">
-                                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                                </svg>
-                                                                Supprimer
-                                                            </button>
-                                                        </form>
+                                                        <button onclick="openDeleteMissionModal({{ $mission->id }}, '{{ addslashes($mission->title) }}')" class="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200">
+                                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                            </svg>
+                                                            Supprimer
+                                                        </button>
                                                     </div>
                                                 @endif
                                             </td>
@@ -636,19 +623,108 @@
             updateSelectedCount();
         });
         
-        // Fonction pour confirmer la suppression d'une mission
-        function confirmSupprimerMission(form) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette mission ? Cette action libérera tous les employés assignés et ne peut pas être annulée.')) {
-                form.submit();
-            }
+        // Fonction pour ouvrir le modal de finalisation
+        function openFinalizeModal(missionId, missionTitle) {
+            document.getElementById('finalizeMissionName').textContent = missionTitle;
+            document.getElementById('finalizeForm').action = `/missions/${missionId}/update-status`;
+            document.getElementById('finalizeModal').classList.remove('hidden');
         }
-        
-        // Fonction pour confirmer la finalisation d'une mission
-        function confirmFinaliserMission(form) {
-            if (confirm('Êtes-vous sûr de vouloir finaliser cette mission ? Les employés assignés seront libérés.')) {
-                form.submit();
-            }
+
+        // Fonction pour ouvrir le modal de suppression de mission
+        function openDeleteMissionModal(missionId, missionTitle) {
+            document.getElementById('deleteMissionName').textContent = missionTitle;
+            document.getElementById('deleteMissionForm').action = `/missions/${missionId}`;
+            document.getElementById('deleteMissionModal').classList.remove('hidden');
         }
+
+        // Fonction pour fermer les modals
+        function closeFinalizeModal() {
+            document.getElementById('finalizeModal').classList.add('hidden');
+        }
+
+        function closeDeleteMissionModal() {
+            document.getElementById('deleteMissionModal').classList.add('hidden');
+        }
+    </script>
+
+    <!-- Modal de finalisation de mission -->
+    <div id="finalizeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900">
+                    <svg class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mt-4">Finaliser la mission</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        Êtes-vous sûr de vouloir finaliser la mission <span id="finalizeMissionName" class="font-medium"></span> ? 
+                        Les employés assignés seront libérés.
+                    </p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <form id="finalizeForm" method="POST" class="inline">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="status" value="terminee">
+                        <button type="submit" class="px-4 py-2 bg-green-600 text-white text-base font-medium rounded-md w-24 mr-2 shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300">
+                            Finaliser
+                        </button>
+                    </form>
+                    <button onclick="closeFinalizeModal()" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md w-24 shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de suppression de mission -->
+    <div id="deleteMissionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900">
+                    <svg class="h-6 w-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mt-4">Confirmer la suppression</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        Êtes-vous sûr de vouloir supprimer la mission <span id="deleteMissionName" class="font-medium"></span> ? 
+                        Cette action libérera tous les employés assignés et ne peut pas être annulée.
+                    </p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <form id="deleteMissionForm" method="POST" class="inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-24 mr-2 shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                            Supprimer
+                        </button>
+                    </form>
+                    <button onclick="closeDeleteMissionModal()" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md w-24 shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fermer les modals en cliquant à l'extérieur
+        document.getElementById('finalizeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFinalizeModal();
+            }
+        });
+
+        document.getElementById('deleteMissionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteMissionModal();
+            }
+        });
     </script>
     @endpush
 </x-app-layout>
